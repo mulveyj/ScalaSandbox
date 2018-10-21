@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ScalaSandbox.iml" filepath="$PROJECT_DIR$/ScalaSandbox.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaSandbox_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaSandbox_main.iml" group="ScalaSandbox" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaSandbox_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaSandbox_test.iml" group="ScalaSandbox" />
+    </modules>
+  </component>
+</project>
