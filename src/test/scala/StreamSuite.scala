@@ -128,4 +128,14 @@ class StreamSuite extends FunSuite {
     assert(result == Some(4))
   }
 
+  test("constant") {
+    val c = Stream.constant(3)
+    assert(c.take(7).toList == List(3, 3, 3, 3, 3, 3, 3))
+  }
+
+  test("from") {
+    val f = Stream.from(6)
+    assert(f.take(5).toList == List(6, 7, 8, 9, 10))
+  }
+
 }
