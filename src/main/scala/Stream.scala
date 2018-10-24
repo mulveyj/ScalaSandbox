@@ -102,9 +102,19 @@ object Stream {
     cons[Int](n, from(n + 1))
   }
 
-//  def fibs: Stream[Int] = {
-//
-//
-//    }
-//  }
+  def fibs: Stream[Int] = {
+
+    def addNextFib(num0: Int, num1: Int): Stream[Int] = {
+        cons(num0, addNextFib(num1, num0 + num1))
+    }
+    addNextFib(0, 1)
+  }
+
+  def unfold[A, S](initialState: S)(f: S => Option[(A, S)]): Stream[A] = {
+      f(initialState) match {
+        case Some((a: A, s: S)) => cons(a, unfold(s)(f))
+        case None => empty[A]
+      }
+  }
+
 }

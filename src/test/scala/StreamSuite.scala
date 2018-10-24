@@ -1,4 +1,5 @@
 import org.scalatest.FunSuite
+import scala.math._
 
 
 class StreamSuite extends FunSuite {
@@ -136,6 +137,27 @@ class StreamSuite extends FunSuite {
   test("from") {
     val f = Stream.from(6)
     assert(f.take(5).toList == List(6, 7, 8, 9, 10))
+  }
+
+  test("fibs") {
+    val fibnums = Stream.fibs
+    assert(fibnums.take(8).toList == List(0, 1, 1, 2, 3, 5, 8, 13))
+  }
+
+  test("Unfold"){
+    val pi = Pi
+    val initial = pi / 6
+    val next = (current: Double) => Option((roundDecimal(sin(current), 2), current + pi))
+
+    val angleStream: Stream[Double] = Stream.unfold(initial)(next)
+
+    val expected: List[Double] = List(0.50, -0.50, 0.50, -0.50)
+
+    assert(angleStream.take(4).toList == expected)
+  }
+
+  def roundDecimal(number: Double, places: Int): Double = {
+    BigDecimal(number).setScale(places, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
 
 }
