@@ -112,9 +112,15 @@ object Stream {
 
   def unfold[A, S](initialState: S)(f: S => Option[(A, S)]): Stream[A] = {
       f(initialState) match {
-        case Some((a: A, s: S)) => cons(a, unfold(s)(f))
+        case Some(t:(A, S)) => cons(t._1, unfold(t._2)(f))
         case None => empty[A]
       }
+  }
+
+  def fibsUnfold: Stream[Int] = {
+    val initialState = (0, 1)
+    val f: Function1[(Int, Int), Option[(Int, (Int, Int))]] = { case (n0: Int, n1: Int) => Some(n0, (n1, n0 + n1))}
+    unfold(initialState)(f)
   }
 
 }

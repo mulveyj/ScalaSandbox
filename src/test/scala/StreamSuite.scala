@@ -126,7 +126,7 @@ class StreamSuite extends FunSuite {
     val origStream = Stream(2, 3, 4, 5, 6, 8)
     val pred = (n: Int) => n % 4 == 0
     val result = origStream.find(pred)
-    assert(result == Some(4))
+    assert(result.contains(4))
   }
 
   test("constant") {
@@ -154,6 +154,11 @@ class StreamSuite extends FunSuite {
     val expected: List[Double] = List(0.50, -0.50, 0.50, -0.50)
 
     assert(angleStream.take(4).toList == expected)
+  }
+
+  test("fibsUnfold"){
+    val fibnums = Stream.fibsUnfold
+    assert(fibnums.take(8).toList == List(0, 1, 1, 2, 3, 5, 8, 13))
   }
 
   def roundDecimal(number: Double, places: Int): Double = {
