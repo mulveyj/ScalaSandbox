@@ -123,4 +123,14 @@ object Stream {
     unfold(initialState)(f)
   }
 
+  def fromUnfold(n: Int): Stream[Int] = {
+    val f = (n: Int) => Some((n, n + 1))
+    unfold(n)(f)
+  }
+
+  def constantUnfold[A](a: A): Stream[A] = {
+    val f = (a: A) => Some((a, a))
+    unfold(a)(f)
+  }
+
 }

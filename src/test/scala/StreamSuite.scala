@@ -161,6 +161,16 @@ class StreamSuite extends FunSuite {
     assert(fibnums.take(8).toList == List(0, 1, 1, 2, 3, 5, 8, 13))
   }
 
+  test("fromUnfold"){
+    val f = Stream.fromUnfold(6)
+    assert(f.take(5).toList == List(6, 7, 8, 9, 10))
+  }
+
+  test("constantUnfold") {
+    val c = Stream.constantUnfold(3)
+    assert(c.take(7).toList == List(3, 3, 3, 3, 3, 3, 3))
+  }
+
   def roundDecimal(number: Double, places: Int): Double = {
     BigDecimal(number).setScale(places, BigDecimal.RoundingMode.HALF_UP).toDouble
   }
