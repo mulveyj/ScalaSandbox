@@ -112,6 +112,17 @@ class StreamSuite extends FunSuite {
     assert(result1.toList == expected.toList)
   }
 
+  test("append stream of streams") {
+    val sos: Stream[Stream[Int]] = Stream(Stream(1, 2, 3), Stream(1, 2))
+    val str: Stream[Stream[Int]] = Stream(Stream(3))
+    val appended1: Stream[Stream[Int]] = sos.append[Stream[Int]](str)
+    val appended2 = appended1.append(Stream(Stream.empty))
+    val expected1 = List(List(1, 2, 3), List(1, 2), List(3))
+    val expected2 = List(List(1, 2, 3), List(1, 2), List(3), List.empty)
+    assert(appended1.map(l => l.toList).toList == expected1)
+    assert(appended2.map(l => l.toList).toList == expected2)
+  }
+
   test("flatMap") {
     val origStream = Stream(Stream(1, 2), Stream(3, 4, 5), Stream(6))
     val double = (n: Int) => 2 * n
@@ -130,7 +141,7 @@ class StreamSuite extends FunSuite {
   }
 
   test("constant") {
-    val c = Stream.constant(3)
+    val c: Stream[Int] = Stream.constant(3)
     assert(c.take(7).toList == List(3, 3, 3, 3, 3, 3, 3))
   }
 
@@ -167,8 +178,98 @@ class StreamSuite extends FunSuite {
   }
 
   test("constantUnfold") {
-    val c = Stream.constantUnfold(3)
+    val c: Stream[Int] = Stream.constantUnfold(3)
     assert(c.take(7).toList == List(3, 3, 3, 3, 3, 3, 3))
+  }
+
+  test("mapUnfold") {
+    val c: Stream[Int] = Stream.from(3)
+    def f(n: Int): String = (2 * n).toString
+    val doubleString = c.mapUnfold(f)
+    val expected = List("6", "8", "10", "12")
+    assert(doubleString.take(4).toList == expected)
+  }
+
+  test("takeUnfold"){
+    val c: Stream[Int] = Stream.from(3)
+    val first5 = c.takeUnfold(5).toList
+    val expected = List(3, 4, 5, 6, 7)
+    assert(first5 == expected)
+  }
+
+  test("takeWhileUnfold"){
+    val c: Stream[Int] = Stream.from(3)
+    val numTest = (n: Int) => n < 10
+    val lessThan10 = c.takeWhileUnfold(numTest).toList
+    val expected = List(3, 4, 5, 6, 7, 8, 9)
+    assert(lessThan10 == expected)
+  }
+
+  test("zipWith"){
+    val a = Stream.constant[Int](4)
+    val b = Stream.constant[String]("b")
+    def f(arg1: Int, arg2: String):(Int, String) = {
+      (arg1, arg2)
+    }
+    val c = a.zipWith(b, f).take(3).toList
+    val expected = List((4, "b"), (4, "b"), (4, "b"))
+    assert(c == expected)
+  }
+
+  test("zipAll"){
+    val numTest = (n: Int) => n < 7
+    val a = Stream.from(4).takeWhile(numTest)
+    val b = Stream.constant[String]("b")
+    val c = a.zipAll(b).take(5).toList
+    val expected = List((Some(4), Some("b")), (Some(5), Some("b")), (Some(6), Some("b")), (None, Some("b")), (None, Some("b")))
+    assert(c == expected)
+  }
+
+  test("zipWith unequal lengths") {
+    val a = Stream(5, 6, 7, 8)
+    val b = Stream("a", "b", "c")
+    def f(arg1: Int, arg2: String):(Int, String) = {
+      (arg1, arg2)
+    }
+    val c = a.zipWith(b, f).take(3).toList
+    val expected = List((5, "a"), (6, "b"), (7, "c"))
+    assert(c == expected)
+  }
+
+  test("startsWith single"){
+    val testStream = Stream.from(4)
+    val trueStart = Stream(4)
+    val falseStart = Stream(7)
+    assert(testStream.startsWith(trueStart))
+    assert(!testStream.startsWith(falseStart))
+  }
+
+  test("startsWith multiple"){
+    val testStream = Stream.from(4)
+    val trueStart = Stream(4, 5, 6)
+    val falseStart = Stream(7, 8, 9, 10)
+    assert(testStream.startsWith(trueStart))
+    assert(!testStream.startsWith(falseStart))
+    assert(Stream(1, 2, 3).startsWith(Stream(1, 2)))
+  }
+
+  test("startsWith null"){
+    assert(Stream.empty.startsWith(Stream(1, 2)) == false)
+  }
+
+  test("tails"){
+    val testStream = Stream(1, 2, 3)
+    val t = testStream.tails.map(_.toList).toList
+    val expected = List(List(1, 2, 3), List(2, 3), List(3), List())
+    assert(t == expected)
+  }
+
+  test("hasSubsequence"){
+    val testStream = Stream(2, 4, 6, 8, 10, 12)
+    val sub1 = Stream(6, 8)
+    val sub2 = Stream(6, 10)
+    assert(testStream.hasSubsequence(sub1))
+    assert(!testStream.hasSubsequence(sub2))
   }
 
   def roundDecimal(number: Double, places: Int): Double = {
