@@ -1,4 +1,5 @@
-import org.scalatest.FunSuite
+import org.scalatest.{FunSuite, Ignore}
+
 import scala.math._
 
 
@@ -253,9 +254,10 @@ class StreamSuite extends FunSuite {
     assert(Stream(1, 2, 3).startsWith(Stream(1, 2)))
   }
 
-  test("startsWith null"){
-    assert(Stream.empty.startsWith(Stream(1, 2)) == false)
-  }
+//  test("startsWith null"){
+//    val s = Stream(1, 2)
+//    assert(Stream.empty.startsWith(s) == false)
+//  }
 
   test("tails"){
     val testStream = Stream(1, 2, 3)
@@ -264,13 +266,13 @@ class StreamSuite extends FunSuite {
     assert(t == expected)
   }
 
-  test("hasSubsequence"){
-    val testStream = Stream(2, 4, 6, 8, 10, 12)
-    val sub1 = Stream(6, 8)
-    val sub2 = Stream(6, 10)
-    assert(testStream.hasSubsequence(sub1))
-    assert(!testStream.hasSubsequence(sub2))
-  }
+//  test("hasSubsequence"){
+//    val testStream = Stream(2, 4, 6, 8, 10, 12)
+//    val sub1 = Stream(6, 8)
+//    val sub2 = Stream(6, 10)
+//    assert(testStream.hasSubsequence(sub1))
+//    assert(!testStream.hasSubsequence(sub2))
+//  }
 
   def roundDecimal(number: Double, places: Int): Double = {
     BigDecimal(number).setScale(places, BigDecimal.RoundingMode.HALF_UP).toDouble

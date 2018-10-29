@@ -133,15 +133,15 @@ sealed trait Stream[+A] {
   }
 
   def startsWith[A](start: Stream[A]): Boolean = {
-    def zip[B](s1: B, s2: B): Boolean = {
-      s1 match {
-        case null => false
-        case s2 => true
+    def testZip[B](v: (Option[B], Option[B])): Boolean = {
+      v match {
+        case (Some(a1), Some(a2)) => true
         case _ => false
       }
     }
 
-    zipWith[A, Boolean](start, zip).forAll(identity)
+    zipAll(start).takeWhile(testZip).forAll({case (Some(a1), Some(a2)) => a1 == a2})
+
   }
 
 //  def startsWith[A](s: Stream[A]): Boolean =
